@@ -30,6 +30,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:8080",
+    "https://g3190220.github.io",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -39,9 +40,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+@app.get("/test")
 def read_root():
-    return {"Hello": "World"}
+    return {"Message": "OK"}
 
 
 @app.post("/submit", response_class = StreamingResponse)
@@ -55,7 +56,6 @@ def submit(classRooms: str = Form(), file: UploadFile = File(...)):
         studentDict[key] = rows  
     
     # 解析classRooms -> 取得 classRoomList
-    print(classRooms)
     classRooms = json.loads(classRooms)
 
     # 1. 學生隨機分班
@@ -142,7 +142,6 @@ def zipfiles(filenames):
 
     # Must close zip for all contents to be written
     zf.close()
-    print(zf.namelist())
     # Grab ZIP file from in-memory, make response with correct MIME-type
     resp = StreamingResponse(iter([s.getvalue()]), media_type="application/x-zip-compressed", headers={
         'Content-Disposition': f'attachment;filename={zip_filename}'
